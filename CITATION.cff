@@ -1,0 +1,9 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: Pietro
+  given-names: Devò
+orcid: https://doi.org/10.22541/essoar.173193565.59169660/v1
+title: MEVD-R
+version: v1.0.0
+date-released: 2025-03-16
