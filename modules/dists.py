@@ -1010,8 +1010,6 @@ def empirical(
 
     x           -> input value/array/dataframe;
     position    -> plotting position;
-    column      -> dataframe values column;
-    label       -> output label;
     dataframe   -> return stats dataframe flag;
     c_F         -> non-exceedance cumulative probability column label;
     c_x         -> quantiles column label;
