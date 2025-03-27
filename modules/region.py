@@ -420,46 +420,6 @@ def grandjury(
         return H
 
 
-def ranking(
-    data=None,
-    x="h",
-    X="H",
-    center=0,
-    epsilon=0,
-    reference=None,
-):
-    """ranking function"""
-
-    if data is None:
-        data = numpy.stack(
-            [numpy.array(x).squeeze(), numpy.array(X).squeeze()], axis=1
-        )
-    elif type(data).__name__ == "DataFrame":
-        data = numpy.stack(
-            [
-                data.loc[:, x],
-                (
-                    data.loc[:, X]
-                    if reference is None
-                    else data.groupby(level=0)[X].transform(reference)
-                ),
-            ],
-            axis=1,
-        )
-
-    # computing delta
-    delta = numpy.subtract.reduce(data, axis=1)
-
-    if isinstance(center, (int, float)):
-        delta = delta - center
-    elif center == "+" and not all(numpy.signbit(delta)):
-        delta = delta - numpy.nanmin(delta) + epsilon
-    elif center == "-" and any(numpy.signbit(delta)):
-        delta = delta - numpy.nanmax(delta) - epsilon
-
-    return delta / numpy.nansum(delta)
-
-
 def clusters(
     dtb,
     values,
