@@ -523,7 +523,7 @@ def storms(
 
     if output is None:
         return dataframe, maxima, dictionary
-    elif output == "dictionary":
+    elif output is True:
         return {
             "dataframe": dataframe,
             "maxima": maxima,
