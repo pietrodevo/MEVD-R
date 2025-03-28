@@ -1876,10 +1876,6 @@ def jocker(
                         index=clusters.loc[:, "array"],
                     )
 
-            if isinstance(parameters, dict):
-                if not all(isinstance(i, dict) for i in parameters.values()):
-                    parameters = {None: parameters}
-
             # adjustments
             data = (
                 data.set_index(pandas.DatetimeIndex(data.loc[:, "datetime"]))
