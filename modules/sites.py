@@ -2236,7 +2236,7 @@ def jocker(
                         level=1,
                     )
                     .loc[:, ["τ", "κ"]]
-                    .groupby(by=["code", "duration"])
+                    .groupby(by=["code", "duration"], sort=None)
                     .mean()
                     .to_numpy(),
                     [1],
@@ -2247,7 +2247,7 @@ def jocker(
                     # computing constants
                     τ_data_calibration, κ_data_calibration = numpy.split(
                         dataframe_moments.loc[:, ["τ", "κ"]]
-                        .groupby(by=["code", "duration"])
+                        .groupby(by=["code", "duration"], sort=None)
                         .mean()
                         .to_numpy(),
                         [1],
