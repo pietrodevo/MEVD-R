@@ -329,7 +329,7 @@ def stormwalker(
                 outkey = "maxima"
                 outext = "csv"
             else:
-                outkey = "dictionary"
+                outkey = True
                 outext = "pkl"
 
             if events is None:
