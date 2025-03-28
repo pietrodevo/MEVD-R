@@ -418,7 +418,7 @@ def clusters(
     if skip and file.flag(station, procdir, procext):
         if out:
             utils.printing(
-                "jocker:", station, "processing resumed", level=level
+                "clusters:", station, "processing resumed", level=level
             )
             # loading
             output = utils.load(
