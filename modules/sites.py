@@ -2267,8 +2267,7 @@ def jocker(
                             data_calibration,
                             indexer_calibration,
                             matrix_calibration,
-                            threshold=τ_annual_calibration
-                            * κ_annual_calibration,
+                            threshold=τ_annual_calibration,
                             normalize=κ_annual_calibration,
                             coefficients=None,
                             τ=τ_annual,
@@ -2300,7 +2299,7 @@ def jocker(
                             data_calibration,
                             indexer_calibration,
                             matrix_calibration,
-                            threshold=τ_data_calibration * κ_data_calibration,
+                            threshold=τ_data_calibration,
                             normalize=κ_data_calibration,
                             coefficients=None,
                             v=annual.min(),
