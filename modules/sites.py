@@ -1043,9 +1043,9 @@ def clusters(
                 outdic = {"index": False, **procdic}
             else:
                 output = {
-                    "data": subvalues,
                     "cluster": entry,
                     "subclusters": subentries,
+                    "data": subvalues,
                 }
                 outdic = procdic
 
