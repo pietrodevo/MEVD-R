@@ -613,21 +613,21 @@ def clusters(
             # initialize group list
             group = []
 
+            # initialize subentries dataframe
+            subentries = pandas.DataFrame(
+                {i: pandas.Series(dtype=j) for i, j in types.items()}
+            ).set_index("array")
+
+            # initialize subvalues dataframe
+            subvalues = pandas.DataFrame(
+                data={
+                    indexdatetime: pandas.Series([], dtype="datetime64[ns]")
+                },
+                index=pandas.Index([], name=indexcode),
+            )
+
             if infer:
-
-                # initialize subentries dataframe
-                subentries = pandas.DataFrame(
-                    {i: pandas.Series(dtype=j) for i, j in types.items()}
-                ).set_index("array")
-
-                # initialize subvalues dataframe
-                subvalues = pandas.DataFrame(
-                    data={
-                        "datetime": pandas.Series([], dtype="datetime64[ns]")
-                    },
-                    index=pandas.Index([], name="code"),
-                )
-
+                        
                 for pointer, code in utils.iterables(
                     array.loc[:, "code"], index=1
                 ):
