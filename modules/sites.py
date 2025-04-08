@@ -856,6 +856,9 @@ def clusters(
 
             else:
 
+                # initialize subentries flag
+                subentries = None
+
                 for pointer, code in utils.iterables(
                     array.loc[:, "code"], index=1
                 ):
