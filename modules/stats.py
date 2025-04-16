@@ -301,7 +301,7 @@ def blocks(
     maxima=None,
     threshold=None,
     normalize=None,
-    lenght=3,
+    length=3,
     delta=None,
     function=lm,
     outputs=3,
@@ -468,7 +468,7 @@ def blocks(
             # size
             λ[i] = subset.size
 
-            if lenght > λ[i, 0]:
+            if length > λ[i, 0]:
                 continue
 
             if isinstance(delta, (int, float)) and numpy.any(
