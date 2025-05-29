@@ -130,7 +130,7 @@ portions = [3, 5, 7]
 portions = 3
 
 # validations distributions
-distributions = ["gev","mev"]
+distributions = ["gev", "mev"]
 
 # validation samples
 samples = 1000
