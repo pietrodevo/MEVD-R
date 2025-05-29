@@ -84,43 +84,20 @@ def normalize(x, axis=0, collapse=1, function=numpy.nanmean, reshape=None):
 def quantile(data, value, drop=True):
     """data quantile function"""
 
+    if type(data).__name__ in ["Series", "DataFrame"]:
+        data = data.to_numpy()
+
     if drop:
         data = data[~numpy.isnan(data)]
 
-    if isinstance(value, float) and (0 <= value <= 1):
-        return numpy.quantile(data, value)
-    elif isinstance(value, str) and ("." in value):
-        return numpy.quantile(data, float(value))
-    elif isinstance(value, str) and ("%" in value):
-        return numpy.percentile(
-            data, float(int("".join(i for i in value if i.isdigit())))
-        )
-
-
-def trend(data, function="linear", **keywords):
-    """data trend function"""
-
-    if type(function).__name__ != "function":
-        if function is None:
-            raise
-        elif function == "linear":
-            function = lambda x, a, b: a * x + b
-        elif function == "quadratic":
-            function = lambda x, a, b, c: a * x**2 + b * x + c
-
-    # generating x vector
-    x = numpy.arange(data.shape[0])
-
-    # fitting function to the data
-    par, opt = scipy.optimize.curve_fit(
-        function, x[~numpy.isnan(data)], data[~numpy.isnan(data)], **keywords
-    )
-
-    return function(x, *par)
+    return numpy.quantile(data, utils.quantile(0 if value is None else value))
 
 
 def pwm(data):
     """sample probability weighted moments"""
+
+    if type(data).__name__ in ["Series", "DataFrame"]:
+        data = data.to_numpy()
 
     if data.ndim == 1:
         data = data.reshape((-1, 1))
@@ -242,11 +219,12 @@ def swm(
         λ = size
 
     if type(data).__name__ == "DataFrame":
+
         if index is None:
             index = slice(None)
 
         if isinstance(orders, int):
-            orders = ["L" + str(orders)]
+            orders = ["L" + str(i) for i in range(1, orders + 1)]
         elif isinstance(orders, str):
             orders = utils.enumerating(orders)
 
@@ -262,6 +240,7 @@ def swm(
             coefficients = data.loc[index, coefficients].to_numpy()
 
     elif type(orders).__name__ == "ndarray":
+
         # linear moments
         m = orders
 
@@ -279,14 +258,14 @@ def swm(
     else:
         c = normalize(coefficients)
 
-    # computing stats
+    # computing swm
     x = (
         numpy.add.reduce(c * m * λ, axis=0)
         / numpy.add.reduce(c * κ * λ, axis=0)
     ).reshape(-1, m.shape[1])
 
     if dataframe:
-        return pandas.DataFrame(columns=orders, data=c)
+        return pandas.DataFrame(x, columns=orders)
     elif x.shape[0] == 1:
         return x[0]
     else:
@@ -304,7 +283,7 @@ def blocks(
     length=3,
     delta=None,
     function=lm,
-    outputs=3,
+    outputs=None,
     arguments=(),
     keywords={},
     statistics=True,
@@ -314,7 +293,10 @@ def blocks(
 
     if not callable(function):
         if isinstance(function, str):
-            function = utils.definition(function)
+            if function in globals():
+                function = globals()[function]
+            else:
+                function = utils.definition(function)
         elif isinstance(function, (list, tuple)):
             function = utils.definition(*function)
         elif isinstance(function, dict):
@@ -330,7 +312,10 @@ def blocks(
             for i in range(1, outputs + 1)
         ]
     elif isinstance(outputs, str):
-        outputs = utils.enumerating(outputs)
+        if any(i.isdigit() for i in outputs):
+            outputs = utils.enumerating(outputs)
+        else:
+            outputs = [outputs]
 
     if type(data).__name__ in ["Series", "DataFrame"]:
 
@@ -361,6 +346,9 @@ def blocks(
                 else 1
             )
 
+        # sort index
+        data.sort_index(inplace=True)
+
         # array of datetimes
         datetimes = dates.array(
             data.index[0],
@@ -382,7 +370,7 @@ def blocks(
         # setting step
         step = 1
 
-    if threshold is None:
+    if pandas.isna(threshold):
         τ = 0
     else:
         if isinstance(threshold, (int, float)):
@@ -439,7 +427,7 @@ def blocks(
         λ = numpy.full((datetimes.shape[0], 1), numpy.nan)
 
         if function is not None:
-            x = numpy.full((datetimes.shape[0], len(outputs)), numpy.nan)
+            dictionary = {}
 
         for i, datetime in enumerate(datetimes):
 
@@ -480,7 +468,30 @@ def blocks(
                 continue
 
             if function is not None:
-                x[i, :] = function(*arguments, data=subset, **keywords)
+                dictionary[i] = function(*arguments, data=subset, **keywords)
+
+        if function is not None:
+
+            if len(dictionary) == 0:
+                raise
+
+            if outputs is None:
+                # infer dimension
+                dimension = next(iter(dictionary.values())).size
+
+                # formatting outputs
+                outputs = [
+                    ("L" if function.__name__ == "lm" else "X") + str(i)
+                    for i in range(1, dimension + 1)
+                ]
+
+            # initializing array
+            x = numpy.full((datetimes.shape[0], len(outputs)), numpy.nan)
+
+            # assigning values
+            x[list(dictionary.keys())] = numpy.vstack(
+                list(dictionary.values())
+            )
 
         if dataframe:
             return pandas.DataFrame(
