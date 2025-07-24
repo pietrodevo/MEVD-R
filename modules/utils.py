@@ -623,7 +623,7 @@ def iterfun(function, *args, dictionaries={}, **keywords):
     results = []
 
     for dictionary in dictionaries:
-        # udate dictionary
+        # update dictionary
         dictionary.update(keywords)
 
         # append output
@@ -725,8 +725,10 @@ def definition(
     else:
         if isinstance(function, str):
             function = [function]
+
         # getting output
         out = module
+
         for fun in function:
             out = getattr(out, fun, None)
         if out is None:
