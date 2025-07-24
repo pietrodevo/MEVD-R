@@ -323,7 +323,10 @@ def grandjury(
         # indexing position
         position = int("".join(i for i in order if i.isdigit())) - 1
 
-    # initilize
+    # realizations
+    realizations = int(realizations)
+
+    # initialize
     H = numpy.full((1, len(columns)), numpy.nan)
 
     if maxima:
@@ -367,9 +370,6 @@ def grandjury(
         # array coefficients
         t_a = mom.loc[:, order].to_numpy()
         T_a = swm[position]
-
-        # realizations
-        realizations = int(realizations)
 
         # data generation
         data = [
