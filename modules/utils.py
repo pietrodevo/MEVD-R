@@ -371,20 +371,20 @@ def scriptkeys(*args, update=None, separator=":", split=","):
         return keys
 
 
-def printing(*args, level=1, verbousity=0):
+def printing(*args, level=1, verbosity=0):
     """printing function
 
-    args       -> function arguments;
-    level      -> logging level;
-           = 0 -> disabled;
-           = 1 -> brief;
-           = 2 -> normal;
-           = 3 -> detailed;
-    verbousity -> logging verbousity.
+    args      -> function arguments;
+    level     -> logging level;
+          = 0 -> disabled;
+          = 1 -> brief;
+          = 2 -> normal;
+          = 3 -> detailed;
+    verbosity -> logging verbosity.
 
     """
 
-    if level <= verbousity:
+    if level <= verbosity:
         print(*args)
 
 
@@ -735,3 +735,4 @@ def definition(
             raise
         else:
             return out
+
