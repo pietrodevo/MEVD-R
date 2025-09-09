@@ -80,13 +80,13 @@ def fit(
     # computing parameters
     dtf = stats.blocks(
         data,
-        function=dists.parameters,
         index=index,
         column=column,
         blocks=blocks,
         maxima=maxima,
         threshold=threshold,
         normalize=normalize,
+        function=dists.parameters,
         outputs=parameters,
         arguments=(distribution, *args),
         keywords={
@@ -275,3 +275,4 @@ def quantile(
         c_f,
         level,
     )
+
